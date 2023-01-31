@@ -1,4 +1,4 @@
-# Repo for my psets and projects solutions for EDD-2023-2 at UNAM FCiencias
+# Repo for my psets and projects solutions of EDD-2023-2 at UNAM FCiencias
 
 ## Structure of the repo
 

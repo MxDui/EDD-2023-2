@@ -19,10 +19,14 @@ public abstract class MeteSaca<T> {
 
         /**
          * Construye un nodo con un elemento.
+         * 
          * @param elemento el elemento del nodo.
          */
         public Nodo(T elemento) {
             // Aquí va su código.
+            this.elemento = elemento;
+            this.siguiente = null;
+
         }
     }
 
@@ -33,49 +37,80 @@ public abstract class MeteSaca<T> {
 
     /**
      * Agrega un elemento al extremo de la estructura.
+     * 
      * @param elemento el elemento a agregar.
      */
     public abstract void mete(T elemento);
 
     /**
      * Elimina el elemento en un extremo de la estructura y lo regresa.
+     * 
      * @return el elemento en un extremo de la estructura.
      * @throws NoSuchElementException si la estructura está vacía.
      */
     public T saca() {
         // Aquí va su código.
+
+        if (cabeza == null)
+            throw new NoSuchElementException();
+        T elemento = cabeza.elemento;
+        cabeza = cabeza.siguiente;
+        if (cabeza == null)
+            rabo = null;
+        return elemento;
+
     }
 
     /**
      * Nos permite ver el elemento en un extremo de la estructura, sin sacarlo
      * de la misma.
+     * 
      * @return el elemento en un extremo de la estructura.
      * @throws NoSuchElementException si la estructura está vacía.
      */
     public T mira() {
         // Aquí va su código.
+        if (cabeza == null)
+            throw new NoSuchElementException();
+        return cabeza.elemento;
+
     }
 
     /**
      * Nos dice si la estructura está vacía.
+     * 
      * @return <code>true</code> si la estructura no tiene elementos,
      *         <code>false</code> en otro caso.
      */
     public boolean esVacia() {
         // Aquí va su código.
+        return cabeza == null;
     }
 
     /**
      * Compara la estructura con un objeto.
+     * 
      * @param object el objeto con el que queremos comparar la estructura.
      * @return <code>true</code> si el objeto recibido es una instancia de la
      *         misma clase que la estructura, y sus elementos son iguales en el
      *         mismo orden; <code>false</code> en otro caso.
      */
-    @Override public boolean equals(Object object) {
+    @Override
+    public boolean equals(Object object) {
         if (object == null || getClass() != object.getClass())
             return false;
-        @SuppressWarnings("unchecked") MeteSaca<T> m = (MeteSaca<T>)object;
+        @SuppressWarnings("unchecked")
+        MeteSaca<T> m = (MeteSaca<T>) object;
         // Aquí va su código.
+        Nodo n1 = cabeza;
+        Nodo n2 = m.cabeza;
+        while (n1 != null && n2 != null) {
+            if (!n1.elemento.equals(n2.elemento))
+                return false;
+            n1 = n1.siguiente;
+            n2 = n2.siguiente;
+        }
+        return n1 == null && n2 == null;
+
     }
 }

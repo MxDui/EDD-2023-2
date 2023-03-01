@@ -189,14 +189,24 @@ public abstract class ArbolBinario<T> implements Coleccion<T> {
             @SuppressWarnings("unchecked")
             Vertice vertice = (Vertice) objeto;
             // Aquí va su código.
-            Vertice v1 = this;
-            Vertice v2 = vertice;
 
-            if (v1 == null || v2 == null)
-                return false;
-            if (!v1.elemento.equals(v2.elemento))
-                return false;
-            return v1.izquierdo.equals(v2.izquierdo) && v1.derecho.equals(v2.derecho);
+            if (vertice.elemento.equals(elemento)) {
+                if (vertice.izquierdo == null && izquierdo == null) {
+                    if (vertice.derecho == null && derecho == null)
+                        return true;
+                    if (vertice.derecho == null || derecho == null)
+                        return false;
+                    return vertice.derecho.equals(derecho);
+                }
+                if (vertice.izquierdo == null || izquierdo == null)
+                    return false;
+                if (vertice.derecho == null && derecho == null)
+                    return vertice.izquierdo.equals(izquierdo);
+                if (vertice.derecho == null || derecho == null)
+                    return false;
+                return vertice.izquierdo.equals(izquierdo) && vertice.derecho.equals(derecho);
+            }
+            return false;
 
         }
 
@@ -357,6 +367,8 @@ public abstract class ArbolBinario<T> implements Coleccion<T> {
     public void limpia() {
         // Aquí va su código.
         raiz = null;
+        elementos = 0;
+
     }
 
     /**
@@ -398,22 +410,57 @@ public abstract class ArbolBinario<T> implements Coleccion<T> {
     @Override
     public String toString() {
         // Aquí va su código.
-        // print the tree with a in order traversal
+
         if (raiz == null)
             return "";
-        return toString(raiz, "");
+        int altura = altura() + 1;
+        int[] a = new int[altura];
+        for (int i = 0; i < altura; i++)
+            a[i] = 0;
+        return toString(raiz, 0, a);
 
     }
 
     /*
-     * Método auxiliar recursivo para imprimir el árbol.
+     * Método auxiliar recursivo para imprimir un árbol.
      */
-    private String toString(Vertice v, String s) {
-        if (v == null)
-            return s;
-        s = toString(v.izquierdo, s);
-        s += v.elemento + ", ";
-        s = toString(v.derecho, s);
+    private String toString(Vertice v, int i, int[] a) {
+
+        String s = v.elemento.toString() + "\n";
+        a[i] = 1;
+        if (v.izquierdo != null && v.derecho != null) {
+            s += dibujaEspacios(i, a);
+            s += "├─›";
+            s += toString(v.izquierdo, i + 1, a);
+            s += dibujaEspacios(i, a);
+            s += "└─»";
+            a[i] = 0;
+            s += toString(v.derecho, i + 1, a);
+        } else if (v.izquierdo != null) {
+            s += dibujaEspacios(i, a);
+            s += "└─›";
+            a[i] = 0;
+            s += toString(v.izquierdo, i + 1, a);
+        } else if (v.derecho != null) {
+            s += dibujaEspacios(i, a);
+            s += "└─»";
+            a[i] = 0;
+            s += toString(v.derecho, i + 1, a);
+        }
+        return s;
+    }
+
+    /*
+     * Método auxiliar para dibujar los espacios.
+     */
+    private String dibujaEspacios(int i, int[] a) {
+        String s = "";
+        for (int j = 0; j < i; j++) {
+            if (a[j] == 1)
+                s += "│  ";
+            else
+                s += "   ";
+        }
         return s;
     }
 

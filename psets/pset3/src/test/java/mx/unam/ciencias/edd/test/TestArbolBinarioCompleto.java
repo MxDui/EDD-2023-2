@@ -19,7 +19,8 @@ import org.junit.rules.Timeout;
 public class TestArbolBinarioCompleto {
 
     /** Expiración para que ninguna prueba tarde más de 5 segundos. */
-    @Rule public Timeout expiracion = Timeout.seconds(5);
+    @Rule
+    public Timeout expiracion = Timeout.seconds(5);
 
     /* Generador de números aleatorios. */
     private Random random;
@@ -28,10 +29,11 @@ public class TestArbolBinarioCompleto {
     /* El árbol. */
     private ArbolBinarioCompleto<Integer> arbol;
 
-    /* Garantiza que una vez encontrado el primer hoyo en BFS, nunca más pueda
-     * aparecer otro elemento.*/
-    private static <T extends Comparable<T>> void
-    arbolBinarioCompletoValido(VerticeArbolBinario<T> v) {
+    /*
+     * Garantiza que una vez encontrado el primer hoyo en BFS, nunca más pueda
+     * aparecer otro elemento.
+     */
+    private static <T extends Comparable<T>> void arbolBinarioCompletoValido(VerticeArbolBinario<T> v) {
         boolean hoyo = false;
         Cola<VerticeArbolBinario<T>> cola = new Cola<VerticeArbolBinario<T>>();
         cola.mete(v);
@@ -53,17 +55,16 @@ public class TestArbolBinarioCompleto {
     /**
      * Valida un árbol binario completo. Comprueba que todos los
      * niveles del árbol estén llenos excepto tal vez el último.
-     * @param <T> tipo del que puede ser el árbol binario completo.
+     * 
+     * @param <T>   tipo del que puede ser el árbol binario completo.
      * @param arbol el árbol a revisar.
      */
-    public static <T extends Comparable<T>> void
-    arbolBinarioCompletoValido(ArbolBinarioCompleto<T> arbol) {
+    public static <T extends Comparable<T>> void arbolBinarioCompletoValido(ArbolBinarioCompleto<T> arbol) {
         if (arbol.esVacia())
             return;
         UtilTestArbolBinario.arbolBinarioValido(arbol);
-        Assert.assertTrue(arbol.altura() ==
-                          (int)(Math.floor(Math.log(arbol.getElementos()) /
-                                           Math.log(2))));
+        Assert.assertTrue(arbol.altura() == (int) (Math.floor(Math.log(arbol.getElementos()) /
+                Math.log(2))));
         if (!arbol.esVacia())
             arbolBinarioCompletoValido(arbol.raiz());
     }
@@ -80,7 +81,8 @@ public class TestArbolBinarioCompleto {
     /**
      * Prueba unitaria para {@link ArbolBinarioCompleto#ArbolBinarioCompleto()}.
      */
-    @Test public void testConstructor() {
+    @Test
+    public void testConstructor() {
         Assert.assertTrue(arbol.esVacia());
         Assert.assertTrue(arbol.getElementos() == 0);
     }
@@ -89,7 +91,8 @@ public class TestArbolBinarioCompleto {
      * Prueba unitaria para {@link
      * ArbolBinarioCompleto#ArbolBinarioCompleto(Coleccion)}.
      */
-    @Test public void testConstructorColeccion() {
+    @Test
+    public void testConstructorColeccion() {
         Lista<Integer> lista = new Lista<Integer>();
         for (int i = 0; i < total; i++)
             lista.agrega(random.nextInt(total));
@@ -102,15 +105,17 @@ public class TestArbolBinarioCompleto {
     /**
      * Prueba unitaria para {@link ArbolBinarioCompleto#agrega}.
      */
-    @Test public void testAgrega() {
+    @Test
+    public void testAgrega() {
         try {
             arbol.agrega(null);
             Assert.fail();
-        } catch (IllegalArgumentException iae) {}
+        } catch (IllegalArgumentException iae) {
+        }
         for (int i = 0; i < total; i++) {
             int n = random.nextInt(100);
             arbol.agrega(n);
-            Assert.assertTrue(arbol.getElementos() == i+1);
+            Assert.assertTrue(arbol.getElementos() == i + 1);
             VerticeArbolBinario<Integer> it = arbol.busca(n);
             Assert.assertTrue(it != null);
             Assert.assertTrue(it.get() == n);
@@ -121,7 +126,8 @@ public class TestArbolBinarioCompleto {
     /**
      * Prueba unitaria para {@link ArbolBinarioCompleto#elimina}.
      */
-    @Test public void testElimina() {
+    @Test
+    public void testElimina() {
         Assert.assertTrue(arbol.esVacia());
         Assert.assertTrue(arbol.getElementos() == 0);
         int[] a = new int[total];
@@ -162,12 +168,13 @@ public class TestArbolBinarioCompleto {
     /**
      * Prueba unitaria para {@link ArbolBinarioCompleto#altura}.
      */
-    @Test public void testAltura() {
+    @Test
+    public void testAltura() {
         Assert.assertTrue(arbol.altura() == -1);
         for (int i = 0; i < total; i++) {
             arbol.agrega(random.nextInt(total));
             arbolBinarioCompletoValido(arbol);
-            int p = (int)Math.floor(Math.log(i+1)/Math.log(2));
+            int p = (int) Math.floor(Math.log(i + 1) / Math.log(2));
             Assert.assertTrue(arbol.altura() == p);
         }
     }
@@ -175,18 +182,20 @@ public class TestArbolBinarioCompleto {
     /**
      * Prueba unitaria para {@link ArbolBinario#getElementos}.
      */
-    @Test public void testGetElementos() {
+    @Test
+    public void testGetElementos() {
         for (int i = 0; i < total; i++) {
             arbol.agrega(random.nextInt(total));
             arbolBinarioCompletoValido(arbol);
-            Assert.assertTrue(arbol.getElementos() == i+1);
+            Assert.assertTrue(arbol.getElementos() == i + 1);
         }
     }
 
     /**
      * Prueba unitaria para {@link ArbolBinario#contiene}.
      */
-    @Test public void testContiene() {
+    @Test
+    public void testContiene() {
         int[] a = new int[total];
         int ini = random.nextInt(total);
         for (int i = 0; i < total; i++) {
@@ -201,7 +210,8 @@ public class TestArbolBinarioCompleto {
     /**
      * Prueba unitaria para {@link ArbolBinario#busca}.
      */
-    @Test public void testBusca() {
+    @Test
+    public void testBusca() {
         int[] a = new int[total];
         int ini = random.nextInt(total);
         for (int i = 0; i < total; i++) {
@@ -215,11 +225,13 @@ public class TestArbolBinarioCompleto {
     /**
      * Prueba unitaria para {@link ArbolBinario#raiz}.
      */
-    @Test public void testRaiz() {
+    @Test
+    public void testRaiz() {
         try {
             arbol.raiz();
             Assert.fail();
-        } catch (NoSuchElementException nsee) {}
+        } catch (NoSuchElementException nsee) {
+        }
         int p = Integer.MAX_VALUE;
         for (int i = 0; i < total; i++) {
             int v = random.nextInt(total);
@@ -234,7 +246,8 @@ public class TestArbolBinarioCompleto {
     /**
      * Prueba unitaria para {@link ArbolBinario#esVacia}.
      */
-    @Test public void testEsVacio() {
+    @Test
+    public void testEsVacio() {
         Assert.assertTrue(arbol.esVacia());
         arbol.agrega(1);
         Assert.assertFalse(arbol.esVacia());
@@ -249,7 +262,8 @@ public class TestArbolBinarioCompleto {
     /**
      * Prueba unitaria para {@link ArbolBinario#limpia}.
      */
-    @Test public void testLimpia() {
+    @Test
+    public void testLimpia() {
         Assert.assertTrue(arbol.esVacia());
         Assert.assertTrue(arbol.getElementos() == 0);
         for (int i = 0; i < total; i++)
@@ -264,7 +278,8 @@ public class TestArbolBinarioCompleto {
     /**
      * Prueba unitaria para {@link ArbolBinario#equals}.
      */
-    @Test public void testEquals() {
+    @Test
+    public void testEquals() {
         arbol = new ArbolBinarioCompleto<Integer>();
         ArbolBinarioCompleto<Integer> arbol2 = new ArbolBinarioCompleto<Integer>();
         Assert.assertTrue(arbol.equals(arbol2));
@@ -288,32 +303,34 @@ public class TestArbolBinarioCompleto {
     /**
      * Prueba unitaria para {@link ArbolBinario#toString}.
      */
-    @Test public void testToString() {
+    @Test
+    public void testToString() {
         /* Estoy dispuesto a aceptar una mejor prueba. */
         Assert.assertTrue(arbol.toString() != null &&
-                          arbol.toString().equals(""));
+                arbol.toString().equals(""));
         for (int i = 0; i < total; i++) {
             arbol.agrega(random.nextInt(total));
             arbolBinarioCompletoValido(arbol);
             Assert.assertTrue(arbol.toString() != null &&
-                              !arbol.toString().equals(""));
+                    !arbol.toString().equals(""));
         }
-        String cadena =
-            "1\n" +
-            "├─›2\n" +
-            "│  ├─›4\n" +
-            "│  └─»5\n" +
-            "└─»3\n";
+        String cadena = "1\n" +
+                "├─›2\n" +
+                "│  ├─›4\n" +
+                "│  └─»5\n" +
+                "└─»3\n";
         arbol = new ArbolBinarioCompleto<Integer>();
         for (int i = 1; i <= 5; i++)
             arbol.agrega(i);
+
         Assert.assertTrue(arbol.toString().equals(cadena));
     }
 
     /**
      * Prueba unitaria para {@link ArbolBinarioCompleto#bfs}.
      */
-    @Test public void testBfs() {
+    @Test
+    public void testBfs() {
         for (int i = 0; i < total; i++) {
             int[] a = { 0 };
             arbol.agrega(i);
@@ -325,7 +342,8 @@ public class TestArbolBinarioCompleto {
     /**
      * Prueba unitaria para {@link ArbolBinarioCompleto#iterator}.
      */
-    @Test public void testIterator() {
+    @Test
+    public void testIterator() {
         int[] arreglo = new int[total];
         for (int i = 0; i < total; i++) {
             int n = random.nextInt(100);
@@ -342,13 +360,14 @@ public class TestArbolBinarioCompleto {
      * Prueba unitaria para la implementación de {@link
      * VerticeArbolBinario#hayPadre}.
      */
-    @Test public void testVerticeHayPadre() {
+    @Test
+    public void testVerticeHayPadre() {
         int r = random.nextInt(total);
         arbol.agrega(r);
         VerticeArbolBinario<Integer> v = arbol.raiz();
         Assert.assertTrue(v.get() == r);
         Assert.assertFalse(v.hayPadre());
-        int i = r+1;
+        int i = r + 1;
         arbol.agrega(i);
         v = arbol.busca(i);
         Assert.assertTrue(v.hayPadre());
@@ -358,13 +377,14 @@ public class TestArbolBinarioCompleto {
      * Prueba unitaria para la implementación de {@link
      * VerticeArbolBinario#hayIzquierdo}.
      */
-    @Test public void testVerticeHayIzquierdo() {
+    @Test
+    public void testVerticeHayIzquierdo() {
         int r = random.nextInt(total);
         arbol.agrega(r);
         VerticeArbolBinario<Integer> v = arbol.raiz();
         Assert.assertTrue(v.get() == r);
         Assert.assertFalse(v.hayIzquierdo());
-        int i = r+1;
+        int i = r + 1;
         arbol.agrega(i);
         Assert.assertTrue(v.hayIzquierdo());
     }
@@ -373,14 +393,15 @@ public class TestArbolBinarioCompleto {
      * Prueba unitaria para la implementación de {@link
      * VerticeArbolBinario#hayDerecho}.
      */
-    @Test public void testVerticeHayDerecho() {
+    @Test
+    public void testVerticeHayDerecho() {
         int r = random.nextInt(total);
         arbol.agrega(r);
         VerticeArbolBinario<Integer> v = arbol.raiz();
         Assert.assertTrue(v.get() == r);
         Assert.assertFalse(v.hayDerecho());
-        arbol.agrega(r+1);
-        arbol.agrega(r+2);
+        arbol.agrega(r + 1);
+        arbol.agrega(r + 2);
         Assert.assertTrue(v.hayDerecho());
     }
 
@@ -388,7 +409,8 @@ public class TestArbolBinarioCompleto {
      * Prueba unitaria para la implementación de {@link
      * VerticeArbolBinario#padre}.
      */
-    @Test public void testVerticePadre() {
+    @Test
+    public void testVerticePadre() {
         int r = random.nextInt(total);
         arbol.agrega(r);
         VerticeArbolBinario<Integer> v = arbol.raiz();
@@ -397,8 +419,9 @@ public class TestArbolBinarioCompleto {
         try {
             v.padre();
             Assert.fail();
-        } catch (NoSuchElementException nsee) {}
-        int i = r+1;
+        } catch (NoSuchElementException nsee) {
+        }
+        int i = r + 1;
         arbol.agrega(i);
         v = arbol.busca(i);
         Assert.assertTrue(v.get() == i);
@@ -411,7 +434,8 @@ public class TestArbolBinarioCompleto {
      * Prueba unitaria para la implementación de {@link
      * VerticeArbolBinario#izquierdo}.
      */
-    @Test public void testVerticeIzquierdo() {
+    @Test
+    public void testVerticeIzquierdo() {
         int r = random.nextInt(total);
         arbol.agrega(r);
         VerticeArbolBinario<Integer> v = arbol.raiz();
@@ -420,8 +444,9 @@ public class TestArbolBinarioCompleto {
         try {
             v.izquierdo();
             Assert.fail();
-        } catch (NoSuchElementException nsee) {}
-        int i = r+1;
+        } catch (NoSuchElementException nsee) {
+        }
+        int i = r + 1;
         arbol.agrega(i);
         Assert.assertTrue(v.hayIzquierdo());
         v = v.izquierdo();
@@ -432,7 +457,8 @@ public class TestArbolBinarioCompleto {
      * Prueba unitaria para la implementación de {@link
      * VerticeArbolBinario#derecho}.
      */
-    @Test public void testVerticeDerecho() {
+    @Test
+    public void testVerticeDerecho() {
         int r = random.nextInt(total);
         arbol.agrega(r);
         VerticeArbolBinario<Integer> v = arbol.raiz();
@@ -441,9 +467,10 @@ public class TestArbolBinarioCompleto {
         try {
             v.derecho();
             Assert.fail();
-        } catch (NoSuchElementException nsee) {}
-        int i = r+1;
-        int d = r+2;
+        } catch (NoSuchElementException nsee) {
+        }
+        int i = r + 1;
+        int d = r + 2;
         arbol.agrega(i);
         arbol.agrega(d);
         Assert.assertTrue(v.hayDerecho());
@@ -455,10 +482,11 @@ public class TestArbolBinarioCompleto {
      * Prueba unitaria para la implementación de {@link
      * VerticeArbolBinario#altura}.
      */
-    @Test public void testVerticeAltura() {
+    @Test
+    public void testVerticeAltura() {
         for (int i = 0; i < total; i++) {
             arbol.agrega(i);
-            int h = (int)(Math.floor(Math.log(i+1) / Math.log(2)));
+            int h = (int) (Math.floor(Math.log(i + 1) / Math.log(2)));
             VerticeArbolBinario<Integer> r = arbol.raiz();
             Assert.assertTrue(r.altura() == h);
             VerticeArbolBinario<Integer> v = arbol.busca(i);
@@ -470,10 +498,11 @@ public class TestArbolBinarioCompleto {
      * Prueba unitaria para la implementación de {@link
      * VerticeArbolBinario#profundidad}.
      */
-    @Test public void testVerticeProfundidad() {
+    @Test
+    public void testVerticeProfundidad() {
         for (int i = 0; i < total; i++) {
             arbol.agrega(i);
-            int h = (int)(Math.floor(Math.log(i+1) / Math.log(2)));
+            int h = (int) (Math.floor(Math.log(i + 1) / Math.log(2)));
             VerticeArbolBinario<Integer> r = arbol.raiz();
             Assert.assertTrue(r.profundidad() == 0);
             VerticeArbolBinario<Integer> v = arbol.busca(i);
@@ -485,7 +514,8 @@ public class TestArbolBinarioCompleto {
      * Prueba unitaria para la implementación de {@link
      * VerticeArbolBinario#get}.
      */
-    @Test public void testVerticeGet() {
+    @Test
+    public void testVerticeGet() {
         for (int i = 0; i < total; i++) {
             int n = random.nextInt(total);
             arbol.agrega(n);
@@ -500,7 +530,8 @@ public class TestArbolBinarioCompleto {
      * Prueba unitaria para la sobrecarga de {@link Object#toString} en la
      * implementación de {@link VerticeArbolBinario}.
      */
-    @Test public void testVerticeToString() {
+    @Test
+    public void testVerticeToString() {
         int r = random.nextInt(total);
         arbol.agrega(r);
         VerticeArbolBinario<Integer> v = arbol.raiz();
@@ -511,7 +542,8 @@ public class TestArbolBinarioCompleto {
      * Prueba unitaria para la sobrecarga de {@link Object#equals} en la
      * implementación de {@link VerticeArbolBinario}.
      */
-    @Test public void testVerticeEquals() {
+    @Test
+    public void testVerticeEquals() {
         int r = random.nextInt(total);
         int i = random.nextInt(total);
         int d = random.nextInt(total);
@@ -531,7 +563,8 @@ public class TestArbolBinarioCompleto {
      * Prueba unitaria para la implementación {@link Iterator#hasNext} a través
      * del método {@link ArbolBinarioCompleto#iterator}.
      */
-    @Test public void testIteradorHasNext() {
+    @Test
+    public void testIteradorHasNext() {
         Iterator<Integer> iterador = arbol.iterator();
         Assert.assertFalse(iterador.hasNext());
         arbol.agrega(-1);
@@ -551,12 +584,14 @@ public class TestArbolBinarioCompleto {
      * Prueba unitaria para la implementación {@link Iterator#next} a través del
      * método {@link ArbolBinarioCompleto#iterator}.
      */
-    @Test public void testIteradorNext() {
+    @Test
+    public void testIteradorNext() {
         Iterator<Integer> iterador = arbol.iterator();
         try {
             iterador.next();
             Assert.fail();
-        } catch (NoSuchElementException nsee) {}
+        } catch (NoSuchElementException nsee) {
+        }
         for (int i = 0; i < total; i++)
             arbol.agrega(i);
         iterador = arbol.iterator();
@@ -565,6 +600,7 @@ public class TestArbolBinarioCompleto {
         try {
             iterador.next();
             Assert.fail();
-        } catch (NoSuchElementException nsee) {}
+        } catch (NoSuchElementException nsee) {
+        }
     }
 }

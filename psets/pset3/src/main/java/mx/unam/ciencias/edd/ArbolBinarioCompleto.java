@@ -187,6 +187,8 @@ public class ArbolBinarioCompleto<T> extends ArbolBinario<T> {
     @Override
     public int altura() {
         // Aquí va su código.
+        if (raiz == null)
+            return -1;
         return (int) (Math.log(elementos) / Math.log(2));
     }
 

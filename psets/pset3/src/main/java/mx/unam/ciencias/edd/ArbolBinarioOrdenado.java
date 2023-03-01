@@ -30,12 +30,15 @@ public class ArbolBinarioOrdenado<T extends Comparable<T>>
         /* Inicializa al iterador. */
         private Iterador() {
             // Aquí va su código.
-            this.pila = new Pila<>();
-            if (raiz != null)
-                pila.mete(raiz);
-            
-                
-
+            pila = new Pila<ArbolBinario<T>.Vertice>();
+            if (esVacia()) {
+                return;
+            }
+            Vertice v = raiz;
+            while (v != null) {
+                pila.mete(v);
+                v = v.izquierdo;
+            }
         }
 
         /* Nos dice si hay un elemento siguiente. */
@@ -50,10 +53,14 @@ public class ArbolBinarioOrdenado<T extends Comparable<T>>
         public T next() {
             // Aquí va su código.
             Vertice v = pila.saca();
-            if (v.hayDerecho())
-                pila.mete(v.derecho);
-            if (v.hayIzquierdo())
-                pila.mete(v.izquierdo);
+            Vertice vi;
+            if (v.hayDerecho()) {
+                vi = v.derecho;
+                while (vi != null) {
+                    pila.mete(vi);
+                    vi = vi.izquierdo;
+                }
+            }
             return v.elemento;
 
         }

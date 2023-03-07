@@ -63,14 +63,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.1</version>
-        <configuration>
-          <compilerArgument>-Xlint:deprecation</compilerArgument>
-          <compilerArgument>-Xlint:unchecked</compilerArgument>
-          <debug>true</debug>
-          <debuglevel>lines,vars,source</debuglevel>
-          <showDeprecation>true</showDeprecation>
-          <showWarnings>true</showWarnings>
-        </configuration>
+
       </plugin>
 
       <plugin>

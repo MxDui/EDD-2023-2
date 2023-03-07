@@ -2,6 +2,7 @@ package mx.unam.ciencias.edd.proyecto1;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,7 +18,7 @@ public class SortUtils {
         }
 
         if (reverseOrder) {
-            reverseOrder(files);
+            reverseOrder(files, unique);
 
         } else {
             normalOrder(files, numericSort, ignoreCase, unique);
@@ -25,9 +26,11 @@ public class SortUtils {
 
     }
 
-    private static void reverseOrder(Lista<String> files) throws IOException {
+    private static void reverseOrder(Lista<String> files, boolean unique)
+            throws IOException {
 
         Lista<Record> list = new Lista<Record>();
+        Lista<Record> orderedList = new Lista<Record>();
 
         for (String file : files) {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
@@ -38,76 +41,96 @@ public class SortUtils {
             }
             br.close();
         }
-        list.mergeSort((a, b) -> a.getLine().trim().replaceAll("[^a-zA-Z]", "").toLowerCase()
+        orderedList = list.mergeSort((a, b) -> a.getLine().trim().replaceAll("[^a-zA-Z]", "").toLowerCase()
                 .compareTo(b.getLine().replaceAll("[^a-zA-Z]", "").toLowerCase()));
 
         // ouput the list in reverse order with a buffered writer
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("output.txt")));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(files.getUltimo())));
 
-        for (Record record : list.reversa()) {
-            bw.write(record.getLine());
-            bw.newLine();
+        // remove duplicates if needed
+        if (unique) {
+            Lista<Record> uniqueLines = new Lista<Record>();
+            Record last = null;
+            for (Record line : orderedList) {
+                if (last == null || !line.getLine().equals(last.getLine())) {
+                    uniqueLines.agrega(line);
+                }
+                last = line;
+            }
+            orderedList = uniqueLines;
+        }
+
+        for (Record record : orderedList.reversa()) {
+            System.out.println(record.getLine());
         }
 
         bw.close();
     }
 
-    private static void normalOrder(Lista<String> files, boolean numericSort, boolean ignoreCase, boolean unique)
+    private static void normalOrder(Lista<String> files, boolean outputFile, boolean ignoreCase, boolean unique)
             throws IOException {
-        Lista<String> lines = new Lista<String>();
+        Lista<Record> list = new Lista<Record>();
+        Lista<Record> orderedList = new Lista<Record>();
 
-        // Read all lines from all files into a single list.
         for (String file : files) {
+
+            if (outputFile && file.equals(files.getPrimero())) {
+                continue;
+            }
+
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
             String line = br.readLine();
             while (line != null) {
-                lines.agrega(line);
+                list.agrega(new Record(line));
                 line = br.readLine();
             }
             br.close();
         }
-
-        // Sort the list.
-        if (numericSort) {
-            lines.mergeSort((a, b) -> {
-                try {
-                    return Integer.parseInt(a) - Integer.parseInt(b);
-                } catch (NumberFormatException e) {
-                    return a.compareTo(b);
-                }
-            });
-        } else {
-            lines.mergeSort((a, b) -> {
-                if (ignoreCase) {
-                    return a.toLowerCase().compareTo(b.toLowerCase());
-                }
-                return a.compareTo(b);
-            });
-        }
+        orderedList = list.mergeSort((a, b) -> a.getLine().trim().replaceAll("[^a-zA-Z]", "").toLowerCase()
+                .compareTo(b.getLine().replaceAll("[^a-zA-Z]", "").toLowerCase()));
 
         // Remove duplicates if needed.
-
         if (unique) {
-            Lista<String> uniqueLines = new Lista<String>();
-            String last = null;
-            for (String line : lines) {
-                if (last == null || !line.equals(last)) {
+            Lista<Record> uniqueLines = new Lista<Record>();
+            Record last = null;
+            for (Record line : orderedList) {
+                if (last == null || !line.getLine().trim().equals(last.getLine().trim())) {
                     uniqueLines.agrega(line);
                 }
                 last = line;
             }
-            lines = uniqueLines;
+            orderedList = uniqueLines;
         }
 
         // ouput the list with a buffered writer
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("output.txt")));
 
-        for (String line : lines) {
-            bw.write(line);
-            bw.newLine();
+        if (outputFile) {
+
+            File file = new File(files.getPrimero());
+
+            if (!file.exists()) {
+                try {
+                    file.createNewFile();
+                    System.out.println("Created new file: " + file.getAbsolutePath());
+                } catch (IOException e) {
+                    System.out.println("Error creating filesssSSS: " + e.getMessage());
+                }
+            } else {
+                System.out.println("File already exists: " + file.getAbsolutePath());
+            }
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+
+            for (Record record : orderedList) {
+                bw.write(record.getLine());
+                bw.newLine();
+            }
+
+            bw.close();
+        } else {
+            for (Record record : orderedList) {
+                System.out.println(record.getLine());
+            }
         }
-
-        bw.close();
 
     }
 }

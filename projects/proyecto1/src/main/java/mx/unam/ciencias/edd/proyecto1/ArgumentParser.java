@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class ArgumentParser {
     private boolean reverseOrder = false;
-    private boolean numericSort = false;
+    private boolean outputFile = false;
     private boolean ignoreCase = false;
     private boolean unique = false;
     private Lista<String> fileNames = new Lista<>();
@@ -13,7 +13,7 @@ public class ArgumentParser {
         try {
             parse(args);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
+
             e.printStackTrace();
         }
     }
@@ -23,21 +23,14 @@ public class ArgumentParser {
             switch (arg) {
                 case "-r":
                     reverseOrder = true;
-                    // TODO: Implementar -r
-
                     break;
                 case "-o":
-                    numericSort = true;
-                    // TODO: Implementar -o
-
+                    outputFile = true;
                     break;
                 case "-f":
-
-                    // TODO: Implementar -f
                     ignoreCase = true;
                     break;
                 case "-u":
-                    // TODO: Implementar -u
                     unique = true;
                     break;
                 default:
@@ -46,15 +39,15 @@ public class ArgumentParser {
             }
         }
 
-        SortUtils.sort(fileNames, reverseOrder, numericSort, ignoreCase, unique);
+        SortUtils.sort(fileNames, reverseOrder, outputFile, ignoreCase, unique);
     }
 
     public boolean isReverseOrder() {
         return reverseOrder;
     }
 
-    public boolean isNumericSort() {
-        return numericSort;
+    public boolean isOutputFile() {
+        return outputFile;
     }
 
     public boolean isIgnoreCase() {

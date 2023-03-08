@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 public class SortUtils {
-    public static void sort(Lista<String> files, boolean reverseOrder, boolean numericSort, boolean ignoreCase,
+    public static void sort(Lista<String> files, boolean reverseOrder, boolean outputFile, boolean ignoreCase,
             boolean unique) throws IOException {
 
         if (files.esVacia()) {
@@ -18,21 +18,24 @@ public class SortUtils {
         }
 
         if (reverseOrder) {
-            reverseOrder(files, unique);
+            reverseOrder(files, unique, outputFile);
 
         } else {
-            normalOrder(files, numericSort, ignoreCase, unique);
+            normalOrder(files, outputFile, ignoreCase, unique);
         }
 
     }
 
-    private static void reverseOrder(Lista<String> files, boolean unique)
+    private static void reverseOrder(Lista<String> files, boolean unique, boolean outputFile)
             throws IOException {
 
         Lista<Record> list = new Lista<Record>();
         Lista<Record> orderedList = new Lista<Record>();
 
         for (String file : files) {
+            if (outputFile && file.equals(files.getPrimero())) {
+                continue;
+            }
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
             String line = br.readLine();
             while (line != null) {
@@ -43,9 +46,6 @@ public class SortUtils {
         }
         orderedList = list.mergeSort((a, b) -> a.getLine().trim().replaceAll("[^a-zA-Z]", "").toLowerCase()
                 .compareTo(b.getLine().replaceAll("[^a-zA-Z]", "").toLowerCase()));
-
-        // ouput the list in reverse order with a buffered writer
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(files.getUltimo())));
 
         // remove duplicates if needed
         if (unique) {
@@ -60,11 +60,34 @@ public class SortUtils {
             orderedList = uniqueLines;
         }
 
-        for (Record record : orderedList.reversa()) {
-            System.out.println(record.getLine());
-        }
+        if (outputFile) {
 
-        bw.close();
+            File file = new File(files.getPrimero());
+
+            if (!file.exists()) {
+                try {
+                    file.createNewFile();
+                    System.out.println("Created new file: " + file.getAbsolutePath());
+                } catch (IOException e) {
+                    System.out.println("Error creating filesssSSS: " + e.getMessage());
+                }
+            } else {
+                System.out.println("File already exists: " + file.getAbsolutePath());
+            }
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+
+            for (Record record : orderedList.reversa()) {
+                bw.write(record.getLine());
+                bw.newLine();
+            }
+
+            bw.close();
+        } else
+
+            for (Record record : orderedList.reversa()) {
+                System.out.println(record.getLine());
+            }
+
     }
 
     private static void normalOrder(Lista<String> files, boolean outputFile, boolean ignoreCase, boolean unique)
